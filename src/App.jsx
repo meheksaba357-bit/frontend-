@@ -929,7 +929,6 @@ const removeScrapItem = (id) => {
 </section>
 
 
-```jsx
 <section className="recyclers-section" id="recyclers">
   <h2>♻️ {t.recyclersTitle}</h2>
   <p>{t.recyclersDescription}</p>
@@ -981,7 +980,6 @@ const removeScrapItem = (id) => {
     )}
   </div>
 </section>
-```
 
         <footer>
           <p>♻️ Kabadiwala Connect — Waste less, recycle more.</p>

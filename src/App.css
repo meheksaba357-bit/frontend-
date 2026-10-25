@@ -1989,3 +1989,120 @@ html {
     margin: 8px 0;
   }
 }
+
+/* Find Nearby Recyclers Search UI */
+.recycler-search {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  max-width: 620px;
+  margin: 22px 0 24px;
+}
+
+.recycler-search input {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid #cbd5d1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #173b2b;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.recycler-search input:focus {
+  border-color: #168044;
+  box-shadow: 0 0 0 3px rgba(22, 128, 68, 0.13);
+}
+
+.recycler-search button {
+  min-height: 48px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 10px;
+  background: #168044;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.recycler-search button:hover {
+  background: #116534;
+}
+
+.recycler-search button:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+  .recycler-search {
+    gap: 8px;
+  }
+
+  .recycler-search input {
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  .recycler-search button {
+    padding: 0 12px;
+    white-space: nowrap;
+  }
+}
+
+
+
+/* Waste Photo Upload UI */
+#photo-upload input[type="file"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: 14px;
+  border: 1px dashed #86c99d;
+  border-radius: 12px;
+  background: #f7fcf8;
+  color: #244b35;
+  font: inherit;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+#photo-upload input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #168044;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#photo-upload input[type="file"]::file-selector-button:hover {
+  background: #116534;
+}
+
+#photo-upload input[type="file"]:focus-visible {
+  outline: 3px solid rgba(22, 128, 68, 0.2);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  #photo-upload input[type="file"] {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  #photo-upload input[type="file"]::file-selector-button {
+    margin-right: 8px;
+    padding: 9px 11px;
+  }
+}
