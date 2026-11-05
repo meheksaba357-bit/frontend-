@@ -8,7 +8,15 @@ const recyclers = [
   {
     id: 1,
     name: 'Green Earth Recycling',
-    rates: { Plastic: 18, Paper: 13, Metal: 40, 'E-waste': 90 },
+    location: 'Vidyanagar, Davanagere, Karnataka',
+    rates: {
+      Plastic: 18,
+      Paper: 13,
+      Cardboard: 10,
+      Iron: 35,
+      Aluminium: 95,
+      'E-waste': 90,
+    },
     distanceKm: 1.8,
     pickupMinutes: 20,
     available: true,
@@ -17,7 +25,15 @@ const recyclers = [
   {
     id: 2,
     name: 'Eco Scrap Centre',
-    rates: { Plastic: 20, Paper: 12, Metal: 38, 'E-waste': 100 },
+    location: 'MCC B Block, Davanagere, Karnataka',
+    rates: {
+      Plastic: 20,
+      Paper: 12,
+      Cardboard: 11,
+      Iron: 38,
+      Aluminium: 100,
+      'E-waste': 100,
+    },
     distanceKm: 3.2,
     pickupMinutes: 35,
     available: true,
@@ -26,7 +42,15 @@ const recyclers = [
   {
     id: 3,
     name: 'Clean City Recyclers',
-    rates: { Plastic: 16, Paper: 15, Metal: 42, 'E-waste': 85 },
+    location: 'PB Road, Davanagere, Karnataka',
+    rates: {
+      Plastic: 16,
+      Paper: 15,
+      Cardboard: 9,
+      Iron: 40,
+      Aluminium: 90,
+      'E-waste': 85,
+    },
     distanceKm: 1.2,
     pickupMinutes: 15,
     available: false,
@@ -34,7 +58,14 @@ const recyclers = [
   },
 ]
 
-const materials = ['Plastic', 'Paper', 'Metal', 'E-waste']
+const materials = [
+  'Plastic',
+  'Paper',
+  'Cardboard',
+  'Iron',
+  'Aluminium',
+  'E-waste',
+]
 const comparisonTranslations = {
   en: {
     kicker: 'SMART RECYCLING',
@@ -60,6 +91,10 @@ const comparisonTranslations = {
     selectedTitle: 'Recycler selected!',
     selectedFor: 'is selected for your',
     nextStep: 'Next: connect this selection to your pickup booking form.',
+    location: 'Enter your city or area',
+locationPlaceholder: 'Example: Davanagere, Bengaluru, Mysuru',
+locationNote: 'Search recyclers by city or area.',
+noResults: 'No demo recyclers found in this area. Actual recycler listings will be available after backend integration.',
   },
 
   hi: {
@@ -86,6 +121,10 @@ const comparisonTranslations = {
     selectedTitle: 'रिसाइक्लर चुन लिया गया!',
     selectedFor: 'आपके',
     nextStep: 'अगला चरण: इस चयन को पिकअप बुकिंग फ़ॉर्म से जोड़ें।',
+    location: 'अपना शहर या क्षेत्र दर्ज करें',
+locationPlaceholder: 'उदाहरण: दावणगेरे, बेंगलुरु, मैसूर',
+locationNote: 'शहर या क्षेत्र के अनुसार रिसाइक्लर खोजें।',
+noResults: 'इस क्षेत्र में कोई डेमो रिसाइक्लर नहीं मिला। वास्तविक रिसाइक्लर की जानकारी बैकएंड इंटीग्रेशन के बाद मिलेगी।',
   },
 
   kn: {
@@ -112,6 +151,10 @@ const comparisonTranslations = {
     selectedTitle: 'ಮರುಬಳಕೆದಾರರನ್ನು ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ!',
     selectedFor: 'ನಿಮ್ಮ',
     nextStep: 'ಮುಂದಿನ ಹಂತ: ಈ ಆಯ್ಕೆಯನ್ನು ಪಿಕಪ್ ಬುಕಿಂಗ್ ಫಾರ್ಮ್‌ಗೆ ಸಂಪರ್ಕಿಸಿ.',
+    location: 'ನಿಮ್ಮ ನಗರ ಅಥವಾ ಪ್ರದೇಶವನ್ನು ನಮೂದಿಸಿ',
+locationPlaceholder: 'ಉದಾಹರಣೆ: ದಾವಣಗೆರೆ, ಬೆಂಗಳೂರು, ಮೈಸೂರು',
+locationNote: 'ನಗರ ಅಥವಾ ಪ್ರದೇಶದ ಪ್ರಕಾರ ಮರುಬಳಕೆದಾರರನ್ನು ಹುಡುಕಿ.',
+noResults: 'ಈ ಪ್ರದೇಶದಲ್ಲಿ ಯಾವುದೇ ಡೆಮೊ ಮರುಬಳಕೆದಾರರು ಕಂಡುಬಂದಿಲ್ಲ. ಬ್ಯಾಕೆಂಡ್ ಸಂಪರ್ಕದ ನಂತರ ನೈಜ ಮಾಹಿತಿಯನ್ನು ಪಡೆಯಬಹುದು.',
   },
 }
 
@@ -119,26 +162,34 @@ function RecyclerComparison({ onSelectRecycler, language = 'en' }) {
   const t = comparisonTranslations[language] || comparisonTranslations.en
   const [material, setMaterial] = useState('Plastic')
   const [weight, setWeight] = useState('5')
+  const [searchLocation, setSearchLocation] = useState('Davanagere')
   const [selectedRecycler, setSelectedRecycler] = useState(null)
   const [sortBy, setSortBy] = useState('earnings')
 
   const results = useMemo(() => {
-    return recyclers
-      .map((recycler) => ({
-        ...recycler,
-        rate: recycler.rates[material],
-        earnings: recycler.rates[material] * Number(weight || 0),
-      }))
-      .sort((a, b) => {
-        if (sortBy === 'distance') {
-          return a.distanceKm - b.distanceKm
-        }
-        if (sortBy === 'time') {
-          return a.pickupMinutes - b.pickupMinutes
-        }
-        return b.earnings - a.earnings
-      })
-  }, [material, weight, sortBy])
+  const search = searchLocation.trim().toLowerCase()
+
+  return recyclers
+    .filter((recycler) =>
+      recycler.location.toLowerCase().includes(search)
+    )
+    .map((recycler) => ({
+      ...recycler,
+      rate: recycler.rates[material],
+      earnings: recycler.rates[material] * Number(weight || 0),
+    }))
+    .sort((a, b) => {
+      if (sortBy === 'distance') {
+        return a.distanceKm - b.distanceKm
+      }
+
+      if (sortBy === 'time') {
+        return a.pickupMinutes - b.pickupMinutes
+      }
+
+      return b.earnings - a.earnings
+    })
+}, [material, weight, sortBy, searchLocation])
 
   const availableResults = results.filter((item) => item.available)
   const bestEarnings = availableResults.reduce(
@@ -155,6 +206,28 @@ function RecyclerComparison({ onSelectRecycler, language = 'en' }) {
 </div>
 
 <div className="comparison-controls">
+  {/* NEW: Location Search */}
+  <div className="comparison-field">
+    <label htmlFor="searchLocation">
+      {t.location}
+    </label>
+
+    <input
+      id="searchLocation"
+      type="text"
+      placeholder={t.locationPlaceholder}
+      value={searchLocation}
+      onChange={(event) => {
+        setSearchLocation(event.target.value)
+        setSelectedRecycler(null)
+        onSelectRecycler?.(null)
+      }}
+    />
+
+    <small>{t.locationNote}</small>
+  </div>
+
+  {/* EXISTING: Material Selection */}
   <div className="comparison-field">
     <label htmlFor="compareMaterial">{t.material}</label>
     <select
@@ -200,83 +273,95 @@ function RecyclerComparison({ onSelectRecycler, language = 'en' }) {
 <p className="comparison-demo-note">{t.demoNote}</p>
 
       <div className="comparison-list">
-        {results.map((recycler) => (
-          <article
-            className={`comparison-card ${
-              selectedRecycler === recycler.id ? 'is-selected' : ''
-            }`}
-            key={recycler.id}
-          >
-            <div className="comparison-card-top">
-              <div>
-                <h3>{recycler.name}</h3>
-                <p className="comparison-rating">
-                 ★ {recycler.rating} {t.rating}
-                </p>
-              </div>
-              {recycler.available ? (
-                <span className="availability available">
-                 {t.available}
-                </span>
-              ) : (
-                <span className="availability unavailable">
-                 {t.unavailable}
-                </span>
-              )}
-            </div>
+  {results.length === 0 ? (
+    <p className="comparison-demo-note">
+      {t.noResults}
+    </p>
+  ) : (
+    results.map((recycler) => (
+      <article
+        className={`comparison-card ${
+          selectedRecycler === recycler.id ? 'is-selected' : ''
+        }`}
+        key={recycler.id}
+      >
+        <div className="comparison-card-top">
+          <div>
+            <h3>{recycler.name}</h3>
 
-            <div className="comparison-stats">
-              <div>
-                <span>{t.ratePerKg}</span>
-                <strong>₹{recycler.rate}</strong>
-              </div>
+            <p className="comparison-location">
+              📍 {recycler.location}
+            </p>
 
-             <div>
-                <span>{t.estimatedPayment}</span>
-                <strong>₹{recycler.earnings.toFixed(2)}</strong>
-              </div>
+            <p className="comparison-rating">
+              ★ {recycler.rating} {t.rating}
+            </p>
+          </div>
 
-             <div>
-                <span>{t.distance}</span>
-                <strong>{recycler.distanceKm} km</strong>
-             </div>
+          {recycler.available ? (
+            <span className="availability available">
+              {t.available}
+            </span>
+          ) : (
+            <span className="availability unavailable">
+              {t.unavailable}
+            </span>
+          )}
+        </div>
 
-             <div>
-               <span>{t.pickupEstimate}</span>
-               <strong>{recycler.pickupMinutes} min</strong>
-              </div>
-           </div>
+        <div className="comparison-stats">
+          <div>
+            <span>{t.ratePerKg}</span>
+            <strong>₹{recycler.rate}</strong>
+          </div>
 
-            {recycler.available && recycler.earnings === bestEarnings && (
-              <p className="best-offer">{t.bestOffer}</p>
-            )}
+          <div>
+            <span>{t.estimatedPayment}</span>
+            <strong>₹{recycler.earnings.toFixed(2)}</strong>
+          </div>
 
-            <button
-              type="button"
-              className="choose-recycler-button"
-              disabled={!recycler.available || Number(weight) <= 0}
-              onClick={() => {
-  setSelectedRecycler(recycler.id)
+          <div>
+            <span>{t.distance}</span>
+            <strong>{recycler.distanceKm} km</strong>
+          </div>
 
-  onSelectRecycler?.({
-    id: recycler.id,
-    name: recycler.name,
-    material,
-    weight: Number(weight),
-    rate: recycler.rate,
-    estimatedPayment: recycler.earnings,
-    distanceKm: recycler.distanceKm,
-    pickupMinutes: recycler.pickupMinutes,
-  })
-}}
-            >
-              {selectedRecycler === recycler.id
-                ? t.recyclerSelected
-                : t.chooseRecycler}
-            </button>
-          </article>
-        ))}
-      </div>
+          <div>
+            <span>{t.pickupEstimate}</span>
+            <strong>{recycler.pickupMinutes} min</strong>
+          </div>
+        </div>
+
+        {recycler.available && recycler.earnings === bestEarnings && (
+          <p className="best-offer">{t.bestOffer}</p>
+        )}
+
+        <button
+          type="button"
+          className="choose-recycler-button"
+          disabled={!recycler.available || Number(weight) <= 0}
+          onClick={() => {
+            setSelectedRecycler(recycler.id)
+
+            onSelectRecycler?.({
+              id: recycler.id,
+              name: recycler.name,
+              material,
+              weight: Number(weight),
+              rate: recycler.rate,
+              estimatedPayment: recycler.earnings,
+              distanceKm: recycler.distanceKm,
+              pickupMinutes: recycler.pickupMinutes,
+            })
+          }}
+        >
+          {selectedRecycler === recycler.id
+            ? t.recyclerSelected
+            : t.chooseRecycler}
+        </button>
+      </article>
+    ))
+  )}
+</div>
 
       {selectedRecycler && (
   <div className="recycler-selection-message" role="status">

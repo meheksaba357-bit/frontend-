@@ -6,7 +6,7 @@ const recyclerData = [
   {
     id: 1,
     name: 'Green Earth Recycling',
-    materials: 'Plastic, Paper, Metal',
+    materials: 'Plastic, Paper, Cardboard, Iron, Aluminium',
     location: 'Vidyanagar, Davanagere',
     contact: '00000 00001',
     phone: '0000000001',
@@ -14,7 +14,7 @@ const recyclerData = [
   {
     id: 2,
     name: 'Eco Scrap Centre',
-    materials: 'Metal, E-waste',
+    materials: 'Iron, Aluminium, E-waste',
     location: 'MCC B Block, Davanagere',
     contact: '00000 00002',
     phone: '0000000002',
@@ -22,7 +22,7 @@ const recyclerData = [
   {
     id: 3,
     name: 'Clean City Recyclers',
-    materials: 'Paper, Plastic, E-waste',
+    materials: 'Paper, Plastic, Cardboard, E-waste',
     location: 'PB Road, Davanagere',
     contact: '00000 00003',
     phone: '0000000003',
@@ -125,7 +125,9 @@ contactRecycler: 'Contact Recycler',
 demoListing: 'Demo listing',
 plastic: 'Plastic',
 paper: 'Paper',
-metal: 'Metal',
+cardboard: 'Cardboard',
+iron: 'Iron',
+aluminium: 'Aluminium',
 ewaste: 'E-waste',
 selectedWaste: 'Selected waste',
 
@@ -225,8 +227,10 @@ contactRecycler: 'रीसाइक्लर से संपर्क कर�
 demoListing: 'डेमो सूची',
 plastic: 'प्लास्टिक',
 paper: 'कागज़',
-metal: 'धातु',
-ewaste: 'ई-कचरा',
+cardboard: 'गत्ता',
+iron: 'लोहा',
+aluminium: 'एल्युमिनियम',
+ewaste: 'ई-वेस्ट',
 selectedWaste: 'चुना गया कचरा',
 
 
@@ -325,7 +329,9 @@ contactRecycler: 'ಮರುಬಳಕೆದಾರರನ್ನು ಸಂಪರ್�
 demoListing: 'ಡೆಮೊ ಪಟ್ಟಿ',
 plastic: 'ಪ್ಲಾಸ್ಟಿಕ್',
 paper: 'ಕಾಗದ',
-metal: 'ಲೋಹ',
+cardboard: 'ಕಾರ್ಡ್‌ಬೋರ್ಡ್',
+iron: 'ಕಬ್ಬಿಣ',
+aluminium: 'ಅಲ್ಯೂಮಿನಿಯಂ',
 ewaste: 'ಇ-ತ್ಯಾಜ್ಯ',
 selectedWaste: 'ಆಯ್ಕೆ ಮಾಡಿದ ತ್ಯಾಜ್ಯ',
 
@@ -358,11 +364,13 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('')
 
   const rates = {
-    Plastic: 15,
-    Paper: 12,
-    Metal: 35,
-    'E-waste': 80,
-  }
+  Plastic: 20,
+  Paper: 15,
+  Cardboard: 10,
+  Iron: 30,
+  Aluminium: 100,
+  'E-waste': 50,
+}
   const totalValue = scrapItems.reduce((total, item) => {
   return total + rates[item.material] * Number(item.weight)
 }, 0)
@@ -506,11 +514,13 @@ const removeScrapItem = (id) => {
       value={identifiedMaterial}
       onChange={(event) => setIdentifiedMaterial(event.target.value)}
     >
-      <option value="">{t.chooseMaterial}</option>
-      <option value="Plastic">{t.plastic} — ₹15/kg</option>
-      <option value="Paper">{t.paper} — ₹12/kg</option>
-      <option value="Metal">{t.metal} — ₹35/kg</option>
-      <option value="E-waste">{t.ewaste} — ₹80/kg</option>
+      <option value=""> {t.chooseMaterial} </option>
+<option value="Plastic">{t.plastic} — ₹20/kg</option>
+<option value="Paper">{t.paper} — ₹15/kg</option>
+<option value="Cardboard">{t.cardboard} — ₹10/kg</option>
+<option value="Iron">{t.iron} — ₹30/kg</option>
+<option value="Aluminium">{t.aluminium} — ₹100/kg</option>
+<option value="E-waste">{t.ewaste} — ₹50/kg</option>
     </select>
 
     <button
@@ -552,10 +562,12 @@ const removeScrapItem = (id) => {
           updateScrapItem(item.id, 'material', event.target.value)
         }
       >
-        <option value="Plastic">Plastic — ₹15/kg</option>
-        <option value="Paper">Paper — ₹12/kg</option>
-        <option value="Metal">Metal — ₹35/kg</option>
-        <option value="E-waste">E-waste — ₹80/kg</option>
+        <option value="Plastic">{t.plastic}</option>
+<option value="Paper">{t.paper}</option>
+<option value="Cardboard">{t.cardboard}</option>
+<option value="Iron">{t.iron}</option>
+<option value="Aluminium">{t.aluminium}</option>
+<option value="E-waste">{t.ewaste}</option>
       </select>
 
       <label>{t.weight}</label>

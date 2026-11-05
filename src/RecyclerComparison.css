@@ -29,7 +29,7 @@
 
 .comparison-controls {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   margin-top: 24px;
 }
@@ -44,6 +44,11 @@
   color: #334155;
   font-size: 14px;
   font-weight: 650;
+}
+.comparison-field small {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .comparison-field select,
@@ -94,6 +99,13 @@
 .comparison-card h3 {
   margin: 0;
   color: #166534;
+  overflow-wrap: anywhere;
+}
+.comparison-location {
+  margin: 6px 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
